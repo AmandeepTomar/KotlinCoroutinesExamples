@@ -5,8 +5,18 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 fun main() {
+
+    runBlocking {
+        val producer=produceNumbers()
+        repeat(5){
+            launchProcessors(it,producer)
+        }
+        delay(1000)
+        producer.cancel()
+    }
 
 }
 

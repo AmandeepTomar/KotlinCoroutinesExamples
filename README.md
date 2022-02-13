@@ -282,6 +282,7 @@
 - Allow a data source to create and return channel
 - `produce{}`  
 - `consumenEach()` -> we are getting each element.  
+- there is no limit on capacity form channel 
 #### <B>Pipelines</B>
 - Where one channel output is given as an input to another channel.
 - One coroutine producing infinite set of values 
@@ -290,9 +291,82 @@
 - if multiple coroutines receives from the same channel values are distributed among them.
 - Different coroutne produce different values in parallen , connect to a channel
 #### <B>Fan-in</B>
-#### <B>Fan-in</B>
+- Multiple coroutine can send values to the same channel.
+
 #### <B>Buffered channels</B>
+- limit on the capacity on the channel 
+- When the capacity is full , the sender is full 
+- When the capacity becomes available , new values can be sent.
+
 #### <B>Take channels</B>
+- Periodically produces a unit after a given delay.
+
+#### Cuncurrncy anb Shared state
+
+- Shared state problem 
+    - Multiple coroutine can update a shared state variable 
+    - Some updates may be lost
+  - <B> Solutions </B>
+    - Atomic variables 
+        - works well for primitives data types and collections 
+        - Difficult for complex data types with no thread-safe implementation.
+                    ```
+                        runBlocking {
+                            val counter=AtomicInteger(0)
+                            withContext(Dispatchers.Default){
+                                massiveRun { counter.getAndIncrement() }
+                            }
+                            println("Counter =${counter.get()}")
+                        }
+                    ```
+    - Thread confinment 
+        - Access is to data is sone through a single thread.
+        - Fine-grained -> each individual increment switches context much slower.
+            - if you want to done something in parallel this one is good.
+                    ```
+                         runBlocking {
+                                val counterContext= newSingleThreadContext("MyCounterContext")
+                                var counter=0
+                                withContext(Dispatchers.Default){
+                                    massiveRun { withContext(counterContext){
+                                        counter++
+                                    } }
+                                }
+                                println("Counter =$counter")
+                            }
+                    ```
+        - Coarse-grained -> the while function is run on a single thread , no context switching is faster.
+            - if you want to run on single thread this ione is good and fast, but not good in parallel.
+            ```
+                            runBlocking {
+                            val counterContext= newSingleThreadContext("MyCounterContext")
+                            var counter=0
+                            withContext(counterContext){
+                                massiveRun { counter++ }
+                            }
+                            println("Counter =$counter")
+                        }
+            ```
+    - Mutual Exclusion Locks
+        - Mutex -> Access a part of code using lock and unlock mechanism.
+        - if a coroutine get a mutex is lock so that it can wait to unlock the variable and then process. 
+        - `withLock{}` it provide both lock and unlock.
+    ```
+          runBlocking {
+            val mutex= Mutex()
+            var counter=0;
+            withContext(Dispatchers.Default){
+                massiveRun {
+                    mutex.withLock {
+                        counter++
+                    }
+                }
+    
+            }
+            println("Counter =$counter")
+        }
+    ```
+    
 
 
 
