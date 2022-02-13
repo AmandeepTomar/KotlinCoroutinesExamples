@@ -183,6 +183,28 @@
   - it will be cancelled when the encompassing coroutine is cancelled., Flow is transparent for cancellation. 
 
 #### <B>Operatoers</B>
+  - take an input flow and transform into an output flow.
+  - Operator are cold , still you need to call collect need to get.
+  - The returning flow is synchronous 
+      - That means it return immediatly its not a coroutine.
+  - `map` Map a flow into anotheor flow.
+  - ```kotlin
+        (1..10).asFlow().map {
+        "Mapping in to String $it"
+        }.collect {
+            println(it)
+        }
+
+    ```
+   - `filter` -> filter the values that we get 
+    - ````kotlin
+         (1..10).asFlow().filter { it%2==0 }.collect { println(it) }
+      ````
+  - `Transform operator` -> Can emit any value at any time
+    - Inside transform operator we can emit String and interger both the value at the same time
+  ````kotlin
+        (1..10).asFlow().transform{ emit("Strint $it.")emit(it) }.collect { println(it) }
+````
 #### <B>Buffereing</B>
 #### <B>Composing Flows</B>
 #### <B>Exception handling</B> 
