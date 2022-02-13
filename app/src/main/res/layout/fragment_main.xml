@@ -52,5 +52,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signoutBtn" />
 
+    <Button
+        android:id="@+id/showNewsBtn"
+        android:layout_width="@dimen/std_width"
+        android:layout_height="wrap_content"
+        style="@style/StandardButton"
+        android:text="Show News Feeds"
+        android:layout_margin="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/deleteUserBtn" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 

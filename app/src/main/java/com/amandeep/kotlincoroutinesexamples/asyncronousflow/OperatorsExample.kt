@@ -11,8 +11,27 @@ fun main() {
         filterOperatorExample()
         println("Transform operator")
         transformOperatorExample()
+        println("Transform Operator")
+        takeOperator()
+        println("Reduce Operator")
+        reduceOperator()
     }
 
+}
+
+suspend fun reduceOperator() {
+val size =5
+    val factorial=(0..size).asFlow().reduce{
+        accumulator, value ->
+        accumulator*value
+    }
+    println("factorial is $factorial")
+
+}
+
+
+suspend fun takeOperator() {
+    (1..10).asFlow().take(3).collect { print(it) }
 }
 
 /**
@@ -20,7 +39,7 @@ fun main() {
  * */
 suspend fun transformOperatorExample() {
     (1..10).asFlow().transform{
-        emit("Strint $it.")
+        emit("Strint $it ")
         emit(it)
 
     }.collect {

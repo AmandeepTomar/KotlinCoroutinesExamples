@@ -187,7 +187,7 @@
   - Operator are cold , still you need to call collect need to get.
   - The returning flow is synchronous 
       - That means it return immediatly its not a coroutine.
-  - `map` Map a flow into anotheor flow.
+  - `map` Map a flow into another flow.
   - ```kotlin
         (1..10).asFlow().map {
         "Mapping in to String $it"
@@ -204,12 +204,104 @@
     - Inside transform operator we can emit String and interger both the value at the same time
   ````kotlin
         (1..10).asFlow().transform{ emit("Strint $it.")emit(it) }.collect { println(it) }
-````
+  ````
+   - `take()` Just limit the process of no times , like if we use take(2) it take two values from flow.
+       - `    (1..10).asFlow().take(3).collect { print(it) }`
+   - Terminal Operates 
+        - `collect` -> collect flow streams 
+        - `toList`  -> convert into list
+        - `toSet`   -> convert into set
+        - `reduce`   -> Allow some operations with an accumulator.(its like store value for each iteration, just like sum for each value)
+    - `FlowOn() Operator` -> Change the context on which the flow is emitted.
+          - ``
+    
 #### <B>Buffereing</B>
+- in case flow is taking takes a long time buffer is useful to accumulate flow values that can be process later.
+- it store the values and put them in queue for processing 
+- put `buffer()` before collection the data.
+
 #### <B>Composing Flows</B>
+- We can compose different flow together.
+- `Zip` ->matches corresponding values of two flows. its like match first flow of first and second value of second flow.
+   ````kotlin
+            val flow1=(1..4).asFlow()
+            val secondFlow= flowOf("One","Two","Three","Four")
+            flow1.zip(secondFlow){ a, b-> "$a in english $b"}.collect {  println(it) }
+    ````
+- `Combine`->Combine the latest value of one flow with the latest value of another flow.
+```kotlin
+  val number=(1..4).asFlow().onEach { delay(300) }
+    val english=flowOf("One","Two","Three","Four").onEach { delay(400) }
+
+    number.combine(english){a,b->"$a->$b"}.collect { println(it) }
+```
+
 #### <B>Exception handling</B> 
+- <B>Exception Handling in flows</B> 
+##### Try/catch 
+- surround `collect` and catch the exception in cache.
+```kotlin
+ try {
+        (1..10).asFlow().onEach { check(it != 8) }.collect { print(it) }
+    }catch (e:Exception){
+        println("Exception is $e")
+    }
+```
+##### .catch() operator 
+- You can catch exception inside a flow.
+- Caches any exception that occuer above the catch operator.  
+`    (1..10).asFlow().onEach { check(it!=2) }.catch { println("Exception $it") }.collect { print(it) }
+  `
+#### onCompletion()  
+- its line a finally block in java , so it will be executed finally 
+```kotlin
+ (1..10).asFlow()
+        .onEach { check(it!=12) }
+        .onCompletion {  cause ->
+            if (cause!=null)
+                println("Exception occurs $cause")
+            else
+                println("FLow complete without exception")
+        }
+        .catch { println("Catch exception $it") }
+        .collect { println(it) }
+```
+- 
+
+
+### Coroutine Channels 
+- A Channel is conceptually very similar to BlockingQueue. One key difference is that instead of a blocking put operation it has a suspending send, and instead of a blocking take operation it has a suspending receive.
+- Deferred values provide a convenient way to transfer a single value between coroutines. Channels provide a way to transfer a stream of values.
+
+#### <B>Channels</B>
+- Sequence of data. 
+- A coroutine can asynchronously put elements `.send(data)`
+- Can blockingly get elements `.receicve()`
+- Close channel when there are no more elements. `.close()`
+#### <B>Channel Producer</B>
+- Allow a data source to create and return channel
+- `produce{}`  
+- `consumenEach()` -> we are getting each element.  
+#### <B>Pipelines</B>
+- Where one channel output is given as an input to another channel.
+- One coroutine producing infinite set of values 
+- one or more coroutine consuming or transforming those values.
+#### <B>Fan-out</B>
+- if multiple coroutines receives from the same channel values are distributed among them.
+- Different coroutne produce different values in parallen , connect to a channel
+#### <B>Fan-in</B>
+#### <B>Fan-in</B>
+#### <B>Buffered channels</B>
+#### <B>Take channels</B>
 
 
 
 
+
+#### References 
+- https://kotlinlang.org/docs/coroutines-basics.html#
+- https://developer.android.com/kotlin/coroutines?
+- https://idemia.udemy.com/course/coroutines/learn/lecture/17341054#reviews
+    - awesome.
+    - Most of the example are picked from this course.
   

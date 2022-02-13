@@ -36,5 +36,16 @@
         <action
             android:id="@+id/action_mainFragment_to_signupFragment"
             app:destination="@id/signupFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_newsFeedsFragment"
+            app:destination="@id/newsFeedsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newsFeedsFragment"
+        android:name="com.amandeep.kotlincoroutinesexamples.view.newFeeds.NewsFeedsFragment"
+        android:label="NewsFeedsFragment" >
+        <action
+            android:id="@+id/action_newsFeedsFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
 </navigation>

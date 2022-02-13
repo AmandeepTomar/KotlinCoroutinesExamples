@@ -25,7 +25,12 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         signoutBtn.setOnClickListener { onSignout() }
         deleteUserBtn.setOnClickListener { onDelete() }
+        showNewsBtn.setOnClickListener {
+           val action= MainFragmentDirections.actionMainFragmentToNewsFeedsFragment()
+            Navigation.findNavController(showNewsBtn).navigate(action)
+        }
         usernameTV.text= LoginState.user?.username
+
 
         observeViewModel()
     }
