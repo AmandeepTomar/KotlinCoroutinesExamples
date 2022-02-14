@@ -1,4 +1,24 @@
-# Kotlin Coroutines 
+# Kotlin Coroutines
+
+## About Project
+- This project is have implementation views of coroutines , We have sample for operatoes , channels , Buffers and all items. 
+- We also include android architecture components for demo.
+  - Navigation component. 
+  - MVVM architecture. 
+  - Room for offline store data
+  - Kotlin coroutines for Background
+  - Retrofit for api hitting
+  - Single Activity architecture. 
+  
+- Inside project we have some packages for the topics 
+- View 
+  - it include all the UI or view related stuff.
+- db 
+  - for room database
+- model
+  - Just model that we have used for data model class or tables for Room database
+- Rest of all 
+  - Rest packages are concept or topic  based for coroutine 
 
 ## Introduction
 
